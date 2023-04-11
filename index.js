@@ -9,7 +9,9 @@ c.fillRect(0, 0, canvas.width, canvas.height);
 
 const gravity = 0.7
 
+// sprite class contains methods that both the player and enemy share
 class Sprite {
+    // constructor sets the position, velocity, color and offset
     constructor({ position, velocity, color = 'red', offset }) {
         this.position = position
         this.velocity = velocity
@@ -29,6 +31,7 @@ class Sprite {
         this.isAttacking
     }
 
+    // draw function fills the rectangle and draws it to the canvas
     draw() {
         c.fillStyle = this.color
         c.fillRect(this.position.x, this.position.y, this.width, this.height)
@@ -37,14 +40,16 @@ class Sprite {
         if (this.isAttacking) {
             c.fillStyle = 'green'
             c.fillRect(
-                this.attackBox.position.x, 
-                this.attackBox.position.y, 
-                this.attackBox.width, 
+                this.attackBox.position.x,
+                this.attackBox.position.y,
+                this.attackBox.width,
                 this.attackBox.height)
             }
-        
+
     }
 
+    // updates the position of the players (when jumping applies gravity
+    // and when on the ground sets downward velocity to 0)
     update() {
         this.draw()
         this.attackBox.position.x = this.position.x + this.attackBox.offset.x
@@ -58,6 +63,7 @@ class Sprite {
         } else this.velocity.y += gravity
     }
 
+    // attack method sets attacking to true and after a short timeout sets attacking back to false
     attack() {
         this.isAttacking = true
         setTimeout(() => {
@@ -66,6 +72,7 @@ class Sprite {
     }
 }
 
+// creates an instance of the player sprite
 const player = new Sprite({
     position: {
     x: 0,
@@ -82,6 +89,7 @@ const player = new Sprite({
     }
 });
 
+// creates an instance of the enemy sprite
 const enemy = new Sprite({
     position: {
     x: 400,
@@ -97,6 +105,7 @@ const enemy = new Sprite({
     }
 });
 
+// defines the keys that can be pressed for the game
 const keys = {
     a: {
         pressed: false
@@ -115,15 +124,18 @@ const keys = {
     }
 }
 
+// rectangularCollision function checks to see if the attack boxes are
+// colliding with the other player's rectangle
 function rectangularCollision({ rectangle1, rectangle2 }) {
     return (
-        rectangle1.attackBox.position.x + rectangle1.attackBox.width >= 
+        rectangle1.attackBox.position.x + rectangle1.attackBox.width >=
         rectangle2.position.x && rectangle1.attackBox.position.x <= rectangle2.position.x + rectangle2.width &&
         rectangle1.attackBox.position.y + rectangle1.attackBox.height >= rectangle2.position.y
         && rectangle1.attackBox.position.y <= rectangle2.position.y + rectangle2.height
     )
 }
 
+// animate
 function animate() {
     window.requestAnimationFrame(animate)
     c.fillStyle = 'black'
@@ -176,7 +188,6 @@ function animate() {
 animate()
 
 window.addEventListener('keydown', (event) => {
-    console.log(event.key)
     switch(event.key) {
         case 'd':
             keys.d.pressed = true
@@ -204,10 +215,9 @@ window.addEventListener('keydown', (event) => {
             enemy.velocity.y = -20
         break
         case 'ArrowDown':
-            enemy.isAttacking = true
+            enemy.attack()
             break
     }
-    console.log(event)
 })
 
 window.addEventListener('keyup', (event) => {
@@ -231,5 +241,4 @@ window.addEventListener('keyup', (event) => {
             keys.ArrowLeft.pressed = false
             break
     }
-    console.log(event)
 })
