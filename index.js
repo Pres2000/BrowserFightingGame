@@ -29,6 +29,7 @@ class Sprite {
         }
         this.color = color
         this.isAttacking
+        this.health = 100
     }
 
     // draw function fills the rectangle and draws it to the canvas
@@ -169,7 +170,8 @@ function animate() {
         player.isAttacking
         ) {
         player.isAttacking = false
-        console.log('STAB!')
+        enemy.health -= 20
+        document.querySelector('#enemyHealth').style.width = enemy.health + '%'
     }
 
 
@@ -181,7 +183,8 @@ function animate() {
         enemy.isAttacking
         ) {
         enemy.isAttacking = false
-        console.log('ENEMY STAB!')
+        player.health -= 20
+        document.querySelector('#playerHealth').style.width = player.health + '%'
     }
 }
 
